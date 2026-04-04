@@ -1,7 +1,7 @@
 package com.example.devicebookingapp;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
@@ -27,7 +29,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
 
     private List<Booking> bookingList;
     private Context context;
-    private Runnable onStatusChanged; // 状态改变后通知页面刷新的回调
+    private Runnable onStatusChanged;
 
     public MyBookingAdapter(List<Booking> bookingList, Context context, Runnable onStatusChanged) {
         this.bookingList = bookingList;
@@ -45,60 +47,97 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Booking booking = bookingList.get(position);
-        holder.tvDeviceName.setText(booking.getDeviceName());
-        holder.tvTime.setText("使用时间：\n" + booking.getStartTime() + " \n至 " + booking.getEndTime());
-        holder.tvStatus.setText(booking.getStatus());
 
-        // 根据状态动态调整按钮显示
+        holder.tvDeviceName.setText(booking.getDeviceName());
+        holder.tvStatus.setText(booking.getStatus());
+        holder.tvDuration.setText("使用时长：" + booking.getDuration() + " 分钟");
+        holder.tvStart.setText(booking.getStartTime() != null ? booking.getStartTime() : "--");
+        holder.tvEnd.setText(booking.getEndTime() != null ? booking.getEndTime() : "--");
+
+        // Reset buttons
         holder.btnCancel.setVisibility(View.GONE);
         holder.btnAction.setVisibility(View.GONE);
 
-        if ("未开始".equals(booking.getStatus())) {
-            holder.tvStatus.setTextColor(Color.parseColor("#FF9800"));
-            holder.btnCancel.setVisibility(View.VISIBLE);
-            holder.btnAction.setVisibility(View.VISIBLE);
-            holder.btnAction.setText("开始使用");
+        switch (booking.getStatus() != null ? booking.getStatus() : "") {
+            case "未开始":
+                applyStatus(holder, R.color.status_orange, R.color.status_orange_bg);
+                holder.btnCancel.setVisibility(View.VISIBLE);
+                holder.btnAction.setVisibility(View.VISIBLE);
+                holder.btnAction.setText("开始使用");
+                holder.btnCancel.setOnClickListener(v -> confirmAction(
+                        "取消预约", "确定要取消这个预约吗？", booking.getId(), "cancel"));
+                holder.btnAction.setOnClickListener(v -> confirmAction(
+                        "开始使用", "确认开始使用「" + booking.getDeviceName() + "」？",
+                        booking.getId(), "start"));
+                break;
 
-            holder.btnCancel.setOnClickListener(v -> updateBookingStatus(booking.getId(), "cancel"));
-            holder.btnAction.setOnClickListener(v -> updateBookingStatus(booking.getId(), "start"));
+            case "使用中":
+                applyStatus(holder, R.color.status_green, R.color.status_green_bg);
+                holder.btnAction.setVisibility(View.VISIBLE);
+                holder.btnAction.setText("完成使用");
+                holder.btnAction.setOnClickListener(v -> confirmAction(
+                        "完成使用", "确认已使用完毕，提交归还？", booking.getId(), "finish"));
+                break;
 
-        } else if ("使用中".equals(booking.getStatus())) {
-            holder.tvStatus.setTextColor(Color.parseColor("#4CAF50"));
-            holder.btnAction.setVisibility(View.VISIBLE);
-            holder.btnAction.setText("完成使用");
+            case "已完成":
+                applyStatus(holder, R.color.status_blue, R.color.status_blue_bg);
+                // 显示评价按钮（已审核通过的订单）
+                if (booking.getReviewed() == null || booking.getReviewed() == 0) {
+                    holder.btnAction.setVisibility(View.VISIBLE);
+                    holder.btnAction.setText("写评价");
+                    holder.btnAction.setOnClickListener(v -> {
+                        Intent intent = new Intent(context, ReviewActivity.class);
+                        intent.putExtra("deviceId", booking.getDeviceId());
+                        intent.putExtra("bookingId", booking.getId());
+                        intent.putExtra("deviceName", booking.getDeviceName());
+                        context.startActivity(intent);
+                    });
+                }
+                break;
 
-            holder.btnAction.setOnClickListener(v -> updateBookingStatus(booking.getId(), "finish"));
-
-        } else {
-            // 已完成、已取消等状态，隐藏所有操作按钮
-            holder.tvStatus.setTextColor(Color.parseColor("#757575"));
+            default:
+                applyStatus(holder, R.color.status_gray, R.color.status_gray_bg);
+                break;
         }
     }
 
-    @Override
-    public int getItemCount() { return bookingList.size(); }
+    private void applyStatus(ViewHolder holder, int textColorRes, int bgColorRes) {
+        holder.tvStatus.setTextColor(context.getColor(textColorRes));
+        holder.cvStatusBadge.setCardBackgroundColor(context.getColor(bgColorRes));
+    }
 
-    private void updateBookingStatus(Integer bookingId, String action) {
+    private void confirmAction(String title, String message, Integer bookingId, String action) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("确认", (d, w) -> updateStatus(bookingId, action))
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    private void updateStatus(Integer bookingId, String action) {
         try {
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("bookingId", bookingId);
-            jsonBody.put("action", action);
+            JSONObject json = new JSONObject();
+            json.put("bookingId", bookingId);
+            json.put("action", action);
 
-            RequestBody body = RequestBody.create(jsonBody.toString(), MediaType.get("application/json; charset=utf-8"));
-            Request request = new Request.Builder().url("http://10.0.2.2:8080/api/booking/updateStatus").post(body).build();
+            RequestBody body = RequestBody.create(
+                    json.toString(), MediaType.get("application/json; charset=utf-8"));
+            Request request = new Request.Builder()
+                    .url("http://192.168.10.105:8080/api/booking/updateStatus")
+                    .post(body).build();
 
             new OkHttpClient().newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "操作失败", Toast.LENGTH_SHORT).show());
+                @Override public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    new Handler(Looper.getMainLooper()).post(() ->
+                            Toast.makeText(context, "操作失败，请检查网络", Toast.LENGTH_SHORT).show());
                 }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                @Override public void onResponse(@NonNull Call call, @NonNull Response response)
+                        throws IOException {
                     new Handler(Looper.getMainLooper()).post(() -> {
                         if (response.isSuccessful()) {
                             Toast.makeText(context, "操作成功", Toast.LENGTH_SHORT).show();
-                            if (onStatusChanged != null) onStatusChanged.run(); // 触发页面重新拉取数据
+                            if (onStatusChanged != null) onStatusChanged.run();
                         }
                     });
                 }
@@ -108,17 +147,23 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
         }
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvDeviceName, tvStatus, tvTime;
-        MaterialButton btnCancel, btnAction;
+    @Override public int getItemCount() { return bookingList.size(); }
 
-        public ViewHolder(@NonNull View itemView) {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvDeviceName, tvStatus, tvDuration, tvStart, tvEnd;
+        MaterialButton btnCancel, btnAction;
+        MaterialCardView cvStatusBadge;
+
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvDeviceName = itemView.findViewById(R.id.tv_booking_device);
             tvStatus = itemView.findViewById(R.id.tv_booking_status);
-            tvTime = itemView.findViewById(R.id.tv_booking_time);
+            tvDuration = itemView.findViewById(R.id.tv_booking_duration);
+            tvStart = itemView.findViewById(R.id.tv_booking_start);
+            tvEnd = itemView.findViewById(R.id.tv_booking_end);
             btnCancel = itemView.findViewById(R.id.btn_cancel);
             btnAction = itemView.findViewById(R.id.btn_action);
+            cvStatusBadge = itemView.findViewById(R.id.cv_booking_status_badge);
         }
     }
 }

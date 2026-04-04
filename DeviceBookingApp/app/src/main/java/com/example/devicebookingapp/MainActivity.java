@@ -10,42 +10,72 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private BottomNavigationView bottomNav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        // 管理员登录后直接跳管理员控制台
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
+        String role = prefs.getString("role", "student");
+        if (isLoggedIn && "admin".equals(role)) {
+            startActivity(new Intent(this, AdminActivity.class));
+            // 不 finish()，保留 MainActivity 作为返回栈底
+        }
 
-        // 默认显示首页，防止一进来是空白的
+        bottomNav = findViewById(R.id.bottom_navigation);
         loadFragment(new HomeFragment());
 
         bottomNav.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            Fragment selectedFragment = null;
+            int id = item.getItemId();
+            Fragment f = null;
 
-            if (itemId == R.id.nav_home) {
-                selectedFragment = new HomeFragment();
-            } else if (itemId == R.id.nav_notice) {
-                selectedFragment = new NoticeFragment();
-            } else if (itemId == R.id.nav_device) {
-                // 设备页面全员开放
-                selectedFragment = new DeviceFragment();
-            } else if (itemId == R.id.nav_mine) {
-                // 只有“我的”页面需要强制拦截登录
+            if (id == R.id.nav_home) {
+                f = new HomeFragment();
+            } else if (id == R.id.nav_notice) {
+                f = new NoticeFragment();
+            } else if (id == R.id.nav_device) {
+                f = new DeviceFragment();
+            } else if (id == R.id.nav_mine) {
                 if (!isLoggedIn()) {
                     Toast.makeText(this, "请登录后查看个人信息", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(this, LoginActivity.class));
                     return false;
                 }
-                selectedFragment = new MineFragment();
+                f = new MineFragment();
             }
-
-            return loadFragment(selectedFragment);
+            return loadFragment(f);
         });
     }
 
-    // 封装一个切换页面的工具方法
+    // 每次回到主界面时刷新当前 fragment（切换页面自动刷新）
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 重新加载当前选中的 tab 对应的 fragment
+        int selectedId = bottomNav.getSelectedItemId();
+        Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (current instanceof DeviceFragment) {
+            loadFragment(new DeviceFragment());
+            bottomNav.setSelectedItemId(R.id.nav_device);
+        } else if (current instanceof NoticeFragment) {
+            loadFragment(new NoticeFragment());
+            bottomNav.setSelectedItemId(R.id.nav_notice);
+        }
+        // HomeFragment 和 MineFragment 内部已有 onResume 刷新逻辑
+    }
+
+    public void switchToDeviceTab() {
+        bottomNav.setSelectedItemId(R.id.nav_device);
+    }
+
+    public void switchToNoticeTab() {
+        bottomNav.setSelectedItemId(R.id.nav_notice);
+    }
+
     private boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction()
@@ -57,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isLoggedIn() {
-        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        return prefs.getBoolean("isLoggedIn", false);
+        return getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                .getBoolean("isLoggedIn", false);
     }
 }

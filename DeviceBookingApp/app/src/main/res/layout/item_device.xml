@@ -4,60 +4,139 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/divider"
+    app:cardBackgroundColor="@color/bg_card">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:orientation="vertical"
+        android:padding="18dp">
 
-        <TextView
-            android:id="@+id/tv_item_name"
-            android:layout_width="wrap_content"
+        <!-- Top row: name + status badge -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="设备名称"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#212121"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp">
 
-        <TextView
-            android:id="@+id/tv_item_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_item_name"
-            android:text="分类"
-            android:textColor="#757575"
-            android:layout_marginTop="4dp"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_item_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_item_type"
-            android:text="位置"
-            android:textColor="#757575"
-            android:layout_marginTop="4dp"/>
+                <TextView
+                    android:id="@+id/tv_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="设备名称"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"/>
 
-        <TextView
-            android:id="@+id/tv_item_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="空闲"
-            android:textColor="#4CAF50"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="6dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/brand_primary_light"
+                    android:layout_marginTop="4dp">
+                    <TextView
+                        android:id="@+id/tv_item_type_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="类型"
+                        android:textSize="11sp"
+                        android:textColor="@color/brand_primary"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="3dp"/>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_item_book"
-            android:layout_width="wrap_content"
+            <!-- Status badge -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_status_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/status_green_bg">
+                <TextView
+                    android:id="@+id/tv_item_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="空闲"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/status_green"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"/>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Location row -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_item_status"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="16dp"
-            android:text="预约"
-            app:cornerRadius="8dp"/>
-    </RelativeLayout>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📍 "
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/tv_item_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="位置"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"/>
+        </LinearLayout>
+
+        <!-- Action row: detail + book — use layout_weight for equal sizing -->
+        <!-- Action row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_item_detail"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="详情"
+                android:textSize="14sp"
+                android:paddingVertical="10dp"
+                android:layout_marginEnd="8dp"
+                style="@style/AppButton.Outline"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_item_book"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="立即预约"
+                android:textSize="14sp"
+                android:paddingVertical="10dp"
+                style="@style/AppButton.Primary"/>
+        </LinearLayout>
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

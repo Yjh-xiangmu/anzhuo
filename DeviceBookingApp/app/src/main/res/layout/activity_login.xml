@@ -1,81 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="32dp"
-    android:gravity="center"
-    android:background="#F8F9FA">
+    android:background="@color/bg_page"
+    android:fillViewport="true">
 
-  <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="欢迎使用"
-      android:textSize="32sp"
-      android:textStyle="bold"
-      android:textColor="#212121"
-      android:layout_marginBottom="8dp"/>
-
-  <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="校园共享设备预约系统"
-      android:textSize="16sp"
-      android:textColor="#757575"
-      android:layout_marginBottom="48dp"/>
-
-  <com.google.android.material.textfield.TextInputLayout
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="16dp"
-      app:boxCornerRadiusTopStart="12dp"
-      app:boxCornerRadiusTopEnd="12dp"
-      app:boxCornerRadiusBottomStart="12dp"
-      app:boxCornerRadiusBottomEnd="12dp"
-      style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+      android:orientation="vertical"
+      android:paddingHorizontal="28dp"
+      android:paddingTop="64dp"
+      android:paddingBottom="40dp">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/et_username"
+    <!-- Logo area -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="请输入学号/工号"
-        android:inputType="text" />
-  </com.google.android.material.textfield.TextInputLayout>
+        android:orientation="vertical"
+        android:layout_marginBottom="48dp">
 
-  <com.google.android.material.textfield.TextInputLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="24dp"
-      app:passwordToggleEnabled="true"
-      app:boxCornerRadiusTopStart="12dp"
-      app:boxCornerRadiusTopEnd="12dp"
-      app:boxCornerRadiusBottomStart="12dp"
-      app:boxCornerRadiusBottomEnd="12dp"
-      style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+      <com.google.android.material.card.MaterialCardView
+          android:layout_width="64dp"
+          android:layout_height="64dp"
+          app:cardCornerRadius="18dp"
+          app:cardElevation="0dp"
+          app:cardBackgroundColor="@color/brand_primary"
+          android:layout_marginBottom="20dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="设"
+            android:textSize="28sp"
+            android:textColor="@color/text_white"
+            android:gravity="center"
+            android:textStyle="bold"/>
+      </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/et_password"
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="欢迎回来"
+          android:textSize="30sp"
+          android:textStyle="bold"
+          android:textColor="@color/text_primary"
+          android:layout_marginBottom="8dp"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="校园共享设备预约系统"
+          android:textSize="15sp"
+          android:textColor="@color/text_secondary"/>
+    </LinearLayout>
+
+    <!-- Form card -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="请输入密码"
-        android:inputType="textPassword" />
-  </com.google.android.material.textfield.TextInputLayout>
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/divider"
+        app:cardBackgroundColor="@color/bg_card"
+        android:layout_marginBottom="24dp">
 
-  <com.google.android.material.button.MaterialButton
-      android:id="@+id/btn_login"
-      android:layout_width="match_parent"
-      android:layout_height="56dp"
-      android:text="登 录"
-      android:textSize="18sp"
-      app:cornerRadius="12dp"/>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:padding="24dp">
 
-  <TextView
-      android:id="@+id/tv_register"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="还没有账号？点击注册"
-      android:textColor="#1976D2"
-      android:layout_marginTop="24dp"
-      android:padding="8dp"/>
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="学号 / 工号"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="8dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            style="@style/AppTextInput">
+          <com.google.android.material.textfield.TextInputEditText
+              android:id="@+id/et_username"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="请输入账号"
+              android:inputType="text"
+              android:textSize="15sp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="密码"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="8dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:passwordToggleEnabled="true"
+            style="@style/AppTextInput">
+          <com.google.android.material.textfield.TextInputEditText
+              android:id="@+id/et_password"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="请输入密码"
+              android:inputType="textPassword"
+              android:textSize="15sp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+      </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Login button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="登录"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        style="@style/AppButton.Primary"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Register link -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="还没有账号？"
+          android:textSize="14sp"
+          android:textColor="@color/text_secondary"/>
+      <TextView
+          android:id="@+id/tv_register"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="立即注册"
+          android:textSize="14sp"
+          android:textColor="@color/brand_primary"
+          android:textStyle="bold"
+          android:padding="8dp"/>
+    </LinearLayout>
+
+  </LinearLayout>
+</ScrollView>

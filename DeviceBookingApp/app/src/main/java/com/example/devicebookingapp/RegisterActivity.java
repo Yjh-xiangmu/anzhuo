@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private static final String REG_URL = "http://10.0.2.2:8080/api/user/register";
+    private static final String REG_URL = "http://192.168.10.105:8080/api/user/register";
     private final OkHttpClient client = new OkHttpClient();
 
     @Override
