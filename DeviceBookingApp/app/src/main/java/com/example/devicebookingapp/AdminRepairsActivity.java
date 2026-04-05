@@ -86,7 +86,24 @@ public class AdminRepairsActivity extends AppCompatActivity {
         });
     }
 
-    // 异步加载图片（无需第三方库）
+    // 弹窗显示图片
+    private void showImageDialog(String imageUrl) {
+        ImageView imageView = new ImageView(this);
+        imageView.setAdjustViewBounds(true);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        imageView.setPadding(30, 30, 30, 30);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("查看报修图")
+                .setView(imageView)
+                .setPositiveButton("关闭", null)
+                .create();
+        dialog.show();
+
+        loadImageAsync(imageUrl, imageView);
+    }
+
+    // 异步加载图片
     private void loadImageAsync(String imageUrl, ImageView imageView) {
         executor.execute(() -> {
             try {
@@ -98,9 +115,12 @@ public class AdminRepairsActivity extends AppCompatActivity {
                 InputStream is = conn.getInputStream();
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
                 is.close();
-                mainHandler.post(() -> imageView.setImageBitmap(bitmap));
+                if (bitmap != null) {
+                    mainHandler.post(() -> imageView.setImageBitmap(bitmap));
+                }
             } catch (Exception e) {
-                // 图片加载失败静默处理
+                e.printStackTrace();
+                mainHandler.post(() -> Toast.makeText(AdminRepairsActivity.this, "图片加载失败", Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -158,13 +178,13 @@ public class AdminRepairsActivity extends AppCompatActivity {
             h.tvDesc.setText(r.getDescription());
             h.tvStatus.setText(r.getStatus());
 
-            // 显示故障图片
+            // 显示故障图片查看按钮
             String imgUrl = r.getImageUrl();
             if (imgUrl != null && !imgUrl.isEmpty()) {
-                h.cvImage.setVisibility(View.VISIBLE);
-                loadImageAsync(imgUrl, h.ivImage);
+                h.btnViewImage.setVisibility(View.VISIBLE);
+                h.btnViewImage.setOnClickListener(v -> showImageDialog(imgUrl));
             } else {
-                h.cvImage.setVisibility(View.GONE);
+                h.btnViewImage.setVisibility(View.GONE);
             }
 
             // 状态按钮逻辑
@@ -212,9 +232,8 @@ public class AdminRepairsActivity extends AppCompatActivity {
 
         class VH extends RecyclerView.ViewHolder {
             TextView tvDevice, tvUsername, tvDesc, tvStatus;
-            MaterialCardView cvStatus, cvImage;
-            ImageView ivImage;
-            MaterialButton btnProcessing, btnDone, btnLock;
+            MaterialCardView cvStatus;
+            MaterialButton btnProcessing, btnDone, btnLock, btnViewImage;
             VH(@NonNull View v) {
                 super(v);
                 tvDevice = v.findViewById(R.id.tv_device_name);
@@ -222,11 +241,10 @@ public class AdminRepairsActivity extends AppCompatActivity {
                 tvDesc = v.findViewById(R.id.tv_desc);
                 tvStatus = v.findViewById(R.id.tv_status);
                 cvStatus = v.findViewById(R.id.cv_status);
-                cvImage = v.findViewById(R.id.cv_image);
-                ivImage = v.findViewById(R.id.iv_repair_image);
                 btnProcessing = v.findViewById(R.id.btn_processing);
                 btnDone = v.findViewById(R.id.btn_done);
                 btnLock = v.findViewById(R.id.btn_lock);
+                btnViewImage = v.findViewById(R.id.btn_view_image);
             }
         }
     }
