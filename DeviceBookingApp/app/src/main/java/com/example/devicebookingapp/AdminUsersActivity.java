@@ -1,5 +1,6 @@
 package com.example.devicebookingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,29 +78,42 @@ public class AdminUsersActivity extends AppCompatActivity {
             return new VH(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_admin_user, parent, false));
         }
+
         @Override public void onBindViewHolder(@NonNull VH h, int pos) {
             UserInfo u = userList.get(pos);
             String initial = u.getUsername() != null && u.getUsername().length() > 0
                     ? u.getUsername().substring(0, 1) : "U";
             h.tvAvatar.setText(initial);
             h.tvUsername.setText(u.getUsername());
-            String roleLabel = "admin".equals(u.getRole()) ? "管理员"
-                    : "teacher".equals(u.getRole()) ? "教师" : "学生";
-            h.tvRole.setText(roleLabel);
+
             boolean isAdmin = "admin".equals(u.getRole());
+            boolean isTeacher = "teacher".equals(u.getRole());
+            String roleLabel = isAdmin ? "管理员" : isTeacher ? "教师" : "学生";
+            h.tvRole.setText(roleLabel);
             h.tvRole.setTextColor(getColor(isAdmin ? R.color.brand_primary : R.color.text_secondary));
-            h.tvAvatar.setBackgroundTintList(
-                    android.content.res.ColorStateList.valueOf(
-                            getColor(isAdmin ? R.color.brand_primary : R.color.status_gray)));
+
+            // 点击查看详情
+            h.itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(AdminUsersActivity.this, UserDetailActivity.class);
+                intent.putExtra("username", u.getUsername());
+                intent.putExtra("role", u.getRole());
+                startActivity(intent);
+            });
+
+            // 右侧箭头提示可点击
+            h.tvArrow.setVisibility(View.VISIBLE);
         }
+
         @Override public int getItemCount() { return userList.size(); }
+
         class VH extends RecyclerView.ViewHolder {
-            TextView tvAvatar, tvUsername, tvRole;
+            TextView tvAvatar, tvUsername, tvRole, tvArrow;
             VH(@NonNull View v) {
                 super(v);
                 tvAvatar = v.findViewById(R.id.tv_avatar);
                 tvUsername = v.findViewById(R.id.tv_username);
                 tvRole = v.findViewById(R.id.tv_role);
+                tvArrow = v.findViewById(R.id.tv_arrow);
             }
         }
     }

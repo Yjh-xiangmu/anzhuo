@@ -1,9 +1,14 @@
 package com.example.devicebookingapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -18,9 +23,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -35,6 +45,8 @@ public class AdminRepairsActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefresh;
     private List<Repair> repairList = new ArrayList<>();
     private final OkHttpClient client = new OkHttpClient();
+    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,27 +86,42 @@ public class AdminRepairsActivity extends AppCompatActivity {
         });
     }
 
+    // 异步加载图片（无需第三方库）
+    private void loadImageAsync(String imageUrl, ImageView imageView) {
+        executor.execute(() -> {
+            try {
+                URL url = new URL(imageUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+                conn.connect();
+                InputStream is = conn.getInputStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                is.close();
+                mainHandler.post(() -> imageView.setImageBitmap(bitmap));
+            } catch (Exception e) {
+                // 图片加载失败静默处理
+            }
+        });
+    }
+
     private void updateRepairStatus(int id, String status) {
         try {
             JSONObject json = new JSONObject();
             json.put("id", id);
             json.put("status", status);
-            postJson("http://192.168.10.105:8080/api/repair/updateStatus", json.toString(),
-                    "报修状态已更新");
+            postJson("http://192.168.10.105:8080/api/repair/updateStatus",
+                    json.toString(), "报修状态已更新");
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    // 锁定/解锁设备
     private void setDeviceLock(int deviceId, boolean lock) {
         try {
             JSONObject json = new JSONObject();
             json.put("id", deviceId);
-            json.put("deviceName", "");   // 保持原值，后端只更新 status
-            json.put("deviceType", "");
-            json.put("location", "");
             json.put("status", lock ? "故障锁定" : "空闲");
-            postJson("http://192.168.10.105:8080/api/device/updateStatus", json.toString(),
-                    lock ? "设备已锁定，暂停预约" : "设备已解锁，恢复正常");
+            postJson("http://192.168.10.105:8080/api/device/updateStatus",
+                    json.toString(), lock ? "设备已锁定，暂停预约" : "设备已解锁，恢复正常");
         } catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -131,6 +158,16 @@ public class AdminRepairsActivity extends AppCompatActivity {
             h.tvDesc.setText(r.getDescription());
             h.tvStatus.setText(r.getStatus());
 
+            // 显示故障图片
+            String imgUrl = r.getImageUrl();
+            if (imgUrl != null && !imgUrl.isEmpty()) {
+                h.cvImage.setVisibility(View.VISIBLE);
+                loadImageAsync(imgUrl, h.ivImage);
+            } else {
+                h.cvImage.setVisibility(View.GONE);
+            }
+
+            // 状态按钮逻辑
             switch (r.getStatus() != null ? r.getStatus() : "") {
                 case "待处理":
                     h.tvStatus.setTextColor(getColor(R.color.status_orange));
@@ -160,7 +197,7 @@ public class AdminRepairsActivity extends AppCompatActivity {
                                     .setPositiveButton("解锁", (d, w) -> setDeviceLock(r.getDeviceId(), false))
                                     .setNegativeButton("取消", null).show());
                     break;
-                default: // 已完成
+                default:
                     h.tvStatus.setTextColor(getColor(R.color.status_green));
                     h.cvStatus.setCardBackgroundColor(getColor(R.color.status_green_bg));
                     h.btnProcessing.setVisibility(View.GONE);
@@ -175,7 +212,8 @@ public class AdminRepairsActivity extends AppCompatActivity {
 
         class VH extends RecyclerView.ViewHolder {
             TextView tvDevice, tvUsername, tvDesc, tvStatus;
-            MaterialCardView cvStatus;
+            MaterialCardView cvStatus, cvImage;
+            ImageView ivImage;
             MaterialButton btnProcessing, btnDone, btnLock;
             VH(@NonNull View v) {
                 super(v);
@@ -184,10 +222,18 @@ public class AdminRepairsActivity extends AppCompatActivity {
                 tvDesc = v.findViewById(R.id.tv_desc);
                 tvStatus = v.findViewById(R.id.tv_status);
                 cvStatus = v.findViewById(R.id.cv_status);
+                cvImage = v.findViewById(R.id.cv_image);
+                ivImage = v.findViewById(R.id.iv_repair_image);
                 btnProcessing = v.findViewById(R.id.btn_processing);
                 btnDone = v.findViewById(R.id.btn_done);
                 btnLock = v.findViewById(R.id.btn_lock);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executor.shutdown();
     }
 }

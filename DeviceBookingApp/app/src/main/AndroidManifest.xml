@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 图片上传权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <application
         android:allowBackup="true"
@@ -35,6 +39,7 @@
         <activity android:name=".AdminNoticesActivity" android:exported="false" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".AdminReviewsActivity" android:exported="false"/>
         <activity android:name=".AdminUsersActivity" android:exported="false"/>
+        <activity android:name=".UserDetailActivity" android:exported="false"/>
 
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>

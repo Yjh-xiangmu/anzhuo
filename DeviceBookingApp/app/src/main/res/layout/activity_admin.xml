@@ -22,27 +22,67 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:paddingHorizontal="20dp"
                 android:paddingTop="52dp"
-                android:paddingBottom="24dp"
-                android:gravity="center_vertical">
-                <ImageButton
-                    android:id="@+id/btn_back"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@android:drawable/ic_menu_revert"
-                    android:background="#33FFFFFF"
-                    android:layout_marginEnd="14dp"
-                    android:contentDescription="返回"/>
-                <LinearLayout android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="wrap_content" android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="管理员控制台" android:textSize="22sp" android:textStyle="bold"
-                        android:textColor="@color/text_white"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="设备预约系统后台管理" android:textSize="13sp"
-                        android:textColor="#BFCFFE"/>
+                android:paddingBottom="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+
+                    <!-- Admin avatar -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        app:cardCornerRadius="28dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="#33FFFFFF"
+                        android:layout_marginEnd="14dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="管"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_white"
+                            android:gravity="center"/>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/tv_admin_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="管理员"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_white"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="系统管理员"
+                            android:textSize="13sp"
+                            android:textColor="#BFCFFE"/>
+                    </LinearLayout>
+
+                    <!-- Logout button in header -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_logout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="退出"
+                        android:textSize="13sp"
+                        android:textColor="@color/brand_primary"
+                        app:backgroundTint="#FFFFFF"
+                        app:cornerRadius="10dp"/>
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -91,7 +131,7 @@
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <!-- Menu grid -->
+        <!-- Menu -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp" android:layout_marginBottom="12dp"
@@ -100,92 +140,57 @@
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout android:id="@+id/menu_devices"
-                    android:layout_width="match_parent" android:layout_height="56dp"
-                    android:orientation="horizontal" android:gravity="center_vertical"
-                    android:paddingHorizontal="18dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="📱 " android:textSize="16sp"/>
-                    <TextView android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" android:text="设备管理"
-                        android:textSize="15sp" android:textColor="@color/text_primary"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
+                <LinearLayout android:id="@+id/menu_devices" android:layout_width="match_parent"
+                    android:layout_height="56dp" android:orientation="horizontal"
+                    android:gravity="center_vertical" android:paddingHorizontal="18dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📱 " android:textSize="16sp"/>
+                    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="设备管理" android:textSize="15sp" android:textColor="@color/text_primary"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
                 </LinearLayout>
-                <View android:layout_width="match_parent" android:layout_height="0.5dp"
-                    android:background="@color/divider" android:layout_marginHorizontal="18dp"/>
+                <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/divider" android:layout_marginHorizontal="18dp"/>
 
-                <LinearLayout android:id="@+id/menu_bookings"
-                    android:layout_width="match_parent" android:layout_height="56dp"
-                    android:orientation="horizontal" android:gravity="center_vertical"
-                    android:paddingHorizontal="18dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="📅 " android:textSize="16sp"/>
-                    <TextView android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" android:text="预约管理 &amp; 审核"
-                        android:textSize="15sp" android:textColor="@color/text_primary"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
+                <LinearLayout android:id="@+id/menu_bookings" android:layout_width="match_parent"
+                    android:layout_height="56dp" android:orientation="horizontal"
+                    android:gravity="center_vertical" android:paddingHorizontal="18dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📅 " android:textSize="16sp"/>
+                    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="预约管理 &amp; 审核" android:textSize="15sp" android:textColor="@color/text_primary"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
                 </LinearLayout>
-                <View android:layout_width="match_parent" android:layout_height="0.5dp"
-                    android:background="@color/divider" android:layout_marginHorizontal="18dp"/>
+                <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/divider" android:layout_marginHorizontal="18dp"/>
 
-                <LinearLayout android:id="@+id/menu_repairs"
-                    android:layout_width="match_parent" android:layout_height="56dp"
-                    android:orientation="horizontal" android:gravity="center_vertical"
-                    android:paddingHorizontal="18dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="🔧 " android:textSize="16sp"/>
-                    <TextView android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" android:text="报修管理"
-                        android:textSize="15sp" android:textColor="@color/text_primary"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
+                <LinearLayout android:id="@+id/menu_repairs" android:layout_width="match_parent"
+                    android:layout_height="56dp" android:orientation="horizontal"
+                    android:gravity="center_vertical" android:paddingHorizontal="18dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔧 " android:textSize="16sp"/>
+                    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="报修管理" android:textSize="15sp" android:textColor="@color/text_primary"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
                 </LinearLayout>
-                <View android:layout_width="match_parent" android:layout_height="0.5dp"
-                    android:background="@color/divider" android:layout_marginHorizontal="18dp"/>
+                <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/divider" android:layout_marginHorizontal="18dp"/>
 
-                <LinearLayout android:id="@+id/menu_notices"
-                    android:layout_width="match_parent" android:layout_height="56dp"
-                    android:orientation="horizontal" android:gravity="center_vertical"
-                    android:paddingHorizontal="18dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="📢 " android:textSize="16sp"/>
-                    <TextView android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" android:text="公告管理"
-                        android:textSize="15sp" android:textColor="@color/text_primary"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
+                <LinearLayout android:id="@+id/menu_notices" android:layout_width="match_parent"
+                    android:layout_height="56dp" android:orientation="horizontal"
+                    android:gravity="center_vertical" android:paddingHorizontal="18dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📢 " android:textSize="16sp"/>
+                    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="公告管理" android:textSize="15sp" android:textColor="@color/text_primary"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
                 </LinearLayout>
-                <View android:layout_width="match_parent" android:layout_height="0.5dp"
-                    android:background="@color/divider" android:layout_marginHorizontal="18dp"/>
+                <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/divider" android:layout_marginHorizontal="18dp"/>
 
-                <LinearLayout android:id="@+id/menu_reviews"
-                    android:layout_width="match_parent" android:layout_height="56dp"
-                    android:orientation="horizontal" android:gravity="center_vertical"
-                    android:paddingHorizontal="18dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="⭐ " android:textSize="16sp"/>
-                    <TextView android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" android:text="评价管理"
-                        android:textSize="15sp" android:textColor="@color/text_primary"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
+                <LinearLayout android:id="@+id/menu_reviews" android:layout_width="match_parent"
+                    android:layout_height="56dp" android:orientation="horizontal"
+                    android:gravity="center_vertical" android:paddingHorizontal="18dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⭐ " android:textSize="16sp"/>
+                    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="评价管理" android:textSize="15sp" android:textColor="@color/text_primary"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
                 </LinearLayout>
-                <View android:layout_width="match_parent" android:layout_height="0.5dp"
-                    android:background="@color/divider" android:layout_marginHorizontal="18dp"/>
+                <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/divider" android:layout_marginHorizontal="18dp"/>
 
-                <LinearLayout android:id="@+id/menu_users"
-                    android:layout_width="match_parent" android:layout_height="56dp"
-                    android:orientation="horizontal" android:gravity="center_vertical"
-                    android:paddingHorizontal="18dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="👥 " android:textSize="16sp"/>
-                    <TextView android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" android:text="用户列表"
-                        android:textSize="15sp" android:textColor="@color/text_primary"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
+                <LinearLayout android:id="@+id/menu_users" android:layout_width="match_parent"
+                    android:layout_height="56dp" android:orientation="horizontal"
+                    android:gravity="center_vertical" android:paddingHorizontal="18dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="👥 " android:textSize="16sp"/>
+                    <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="用户管理" android:textSize="15sp" android:textColor="@color/text_primary"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textSize="18sp" android:textColor="@color/text_hint"/>
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

@@ -54,7 +54,6 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
         holder.tvStart.setText(booking.getStartTime() != null ? booking.getStartTime() : "--");
         holder.tvEnd.setText(booking.getEndTime() != null ? booking.getEndTime() : "--");
 
-        // Reset buttons
         holder.btnCancel.setVisibility(View.GONE);
         holder.btnAction.setVisibility(View.GONE);
 
@@ -80,8 +79,14 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
                 break;
 
             case "已完成":
+                // 已完成 = 等待管理员审核，不能评价
+                applyStatus(holder, R.color.status_orange, R.color.status_orange_bg);
+                holder.tvStatus.setText("已完成（待审核）");
+                break;
+
+            case "已审核":
+                // 管理员审核通过，才能评价
                 applyStatus(holder, R.color.status_blue, R.color.status_blue_bg);
-                // 显示评价按钮（已审核通过的订单）
                 if (booking.getReviewed() == null || booking.getReviewed() == 0) {
                     holder.btnAction.setVisibility(View.VISIBLE);
                     holder.btnAction.setText("写评价");
@@ -95,9 +100,12 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
                 }
                 break;
 
-            default:
+            case "已取消":
                 applyStatus(holder, R.color.status_gray, R.color.status_gray_bg);
                 break;
+
+            default:
+                applyStatus(holder, R.color.status_gray, R.color.status_gray_bg);
         }
     }
 
@@ -120,13 +128,11 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
             JSONObject json = new JSONObject();
             json.put("bookingId", bookingId);
             json.put("action", action);
-
             RequestBody body = RequestBody.create(
                     json.toString(), MediaType.get("application/json; charset=utf-8"));
             Request request = new Request.Builder()
                     .url("http://192.168.10.105:8080/api/booking/updateStatus")
                     .post(body).build();
-
             new OkHttpClient().newCall(request).enqueue(new Callback() {
                 @Override public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     new Handler(Looper.getMainLooper()).post(() ->
@@ -142,9 +148,7 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
                     });
                 }
             });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     @Override public int getItemCount() { return bookingList.size(); }
@@ -153,7 +157,6 @@ public class MyBookingAdapter extends RecyclerView.Adapter<MyBookingAdapter.View
         TextView tvDeviceName, tvStatus, tvDuration, tvStart, tvEnd;
         MaterialButton btnCancel, btnAction;
         MaterialCardView cvStatusBadge;
-
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvDeviceName = itemView.findViewById(R.id.tv_booking_device);

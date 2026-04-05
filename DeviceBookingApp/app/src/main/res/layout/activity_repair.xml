@@ -13,23 +13,13 @@
         android:paddingBottom="40dp">
 
         <!-- Top bar -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/bg_card"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="52dp"
-            android:paddingBottom="16dp"
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:background="@color/bg_card"
+            android:paddingHorizontal="16dp" android:paddingTop="52dp" android:paddingBottom="16dp"
             android:gravity="center_vertical">
-            <ImageButton
-                android:id="@+id/btn_back"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@android:drawable/ic_menu_revert"
-                android:background="@color/bg_page"
-                android:layout_marginEnd="12dp"
-                android:contentDescription="返回"/>
+            <ImageButton android:id="@+id/btn_back" android:layout_width="36dp" android:layout_height="36dp"
+                android:src="@android:drawable/ic_menu_revert" android:background="@color/bg_page"
+                android:layout_marginEnd="12dp" android:contentDescription="返回"/>
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -40,88 +30,96 @@
                     android:textColor="@color/text_secondary"/>
             </LinearLayout>
         </LinearLayout>
+        <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/divider"/>
 
-        <View android:layout_width="match_parent" android:layout_height="0.5dp"
-            android:background="@color/divider"/>
-
-        <!-- Select device card -->
+        <!-- Select device -->
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/divider"
-            app:cardBackgroundColor="@color/bg_card">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
-
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_margin="16dp" app:cardCornerRadius="16dp" app:cardElevation="0dp"
+            app:strokeWidth="1dp" app:strokeColor="@color/divider" app:cardBackgroundColor="@color/bg_card">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="18dp">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="报修设备" android:textSize="15sp" android:textStyle="bold"
                     android:textColor="@color/text_primary" android:layout_marginBottom="12dp"/>
-
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
                     style="@style/AppTextInput">
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_device_name_repair"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="设备名称（点击从列表选择）"
-                        android:focusable="false"
-                        android:clickable="true"
-                        android:textSize="14sp"/>
+                        android:id="@+id/et_device_name_repair" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:hint="点击选择设备"
+                        android:focusable="false" android:clickable="true" android:textSize="14sp"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Description card -->
+        <!-- Description + image -->
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="24dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/divider"
-            app:cardBackgroundColor="@color/bg_card">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp" android:layout_marginBottom="12dp"
+            app:cardCornerRadius="16dp" app:cardElevation="0dp"
+            app:strokeWidth="1dp" app:strokeColor="@color/divider" app:cardBackgroundColor="@color/bg_card">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="18dp">
 
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="故障描述" android:textSize="15sp" android:textStyle="bold"
                     android:textColor="@color/text_primary" android:layout_marginBottom="12dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/AppTextInput">
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp" style="@style/AppTextInput">
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_repair_desc"
-                        android:layout_width="match_parent"
+                        android:id="@+id/et_repair_desc" android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="请详细描述故障现象，方便我们快速处理..."
-                        android:inputType="textMultiLine"
-                        android:minLines="5"
-                        android:gravity="top"
-                        android:textSize="14sp"/>
+                        android:inputType="textMultiLine" android:minLines="4"
+                        android:gravity="top" android:textSize="14sp"/>
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Image section -->
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="故障图片（可选）" android:textSize="15sp" android:textStyle="bold"
+                    android:textColor="@color/text_primary" android:layout_marginBottom="12dp"/>
+
+                <!-- Preview -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent" android:layout_height="180dp"
+                    app:cardCornerRadius="12dp" app:cardElevation="0dp"
+                    app:strokeWidth="1dp" app:strokeColor="@color/divider"
+                    android:layout_marginBottom="10dp"
+                    android:id="@+id/cv_image_preview">
+                    <ImageView
+                        android:id="@+id/iv_image_preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:background="@color/bg_input"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/tv_no_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="点击下方按钮选择图片"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_hint"
+                        android:gravity="center"/>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_select_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="从相册选择图片"
+                    android:textSize="14sp"
+                    style="@style/AppButton.Outline"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_submit_repair"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:text="提交报修"
             android:textSize="16sp"
             android:textStyle="bold"

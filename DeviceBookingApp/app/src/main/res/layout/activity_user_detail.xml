@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_page">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="32dp">
+
+        <!-- Header -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/brand_primary">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="52dp"
+                android:paddingBottom="28dp"
+                android:gravity="center_vertical">
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@android:drawable/ic_menu_revert"
+                    android:background="#33FFFFFF"
+                    android:layout_marginEnd="14dp"
+                    android:contentDescription="返回"/>
+                <LinearLayout android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="wrap_content" android:orientation="vertical">
+                    <TextView android:id="@+id/tv_detail_username"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="用户名" android:textSize="22sp" android:textStyle="bold"
+                        android:textColor="@color/text_white"/>
+                    <TextView android:id="@+id/tv_detail_role"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="普通用户" android:textSize="13sp" android:textColor="#BFCFFE"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Stats cards -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:padding="16dp">
+
+            <com.google.android.material.card.MaterialCardView android:layout_width="0dp"
+                android:layout_weight="1" android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp" app:cardCornerRadius="14dp" app:cardElevation="0dp"
+                app:strokeWidth="1dp" app:strokeColor="@color/divider" app:cardBackgroundColor="@color/bg_card">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="14dp" android:gravity="center">
+                    <TextView android:id="@+id/tv_stat_total" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--" android:textSize="26sp"
+                        android:textStyle="bold" android:textColor="@color/brand_primary"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="总预约" android:textSize="11sp" android:textColor="@color/text_secondary"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView android:layout_width="0dp"
+                android:layout_weight="1" android:layout_height="wrap_content"
+                android:layout_marginHorizontal="6dp" app:cardCornerRadius="14dp" app:cardElevation="0dp"
+                app:strokeWidth="1dp" app:strokeColor="@color/divider" app:cardBackgroundColor="@color/bg_card">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="14dp" android:gravity="center">
+                    <TextView android:id="@+id/tv_stat_done" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--" android:textSize="26sp"
+                        android:textStyle="bold" android:textColor="@color/status_green"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="已完成" android:textSize="11sp" android:textColor="@color/text_secondary"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView android:layout_width="0dp"
+                android:layout_weight="1" android:layout_height="wrap_content"
+                android:layout_marginStart="6dp" app:cardCornerRadius="14dp" app:cardElevation="0dp"
+                app:strokeWidth="1dp" app:strokeColor="@color/divider" app:cardBackgroundColor="@color/bg_card">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="14dp" android:gravity="center">
+                    <TextView android:id="@+id/tv_stat_repairs" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="--" android:textSize="26sp"
+                        android:textStyle="bold" android:textColor="@color/status_red"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="报修次数" android:textSize="11sp" android:textColor="@color/text_secondary"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Recent bookings section -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:paddingHorizontal="20dp"
+            android:paddingBottom="12dp" android:gravity="center_vertical">
+            <TextView android:layout_width="0dp" android:layout_weight="1"
+                android:layout_height="wrap_content" android:text="最近预约记录"
+                android:textSize="16sp" android:textStyle="bold" android:textColor="@color/text_primary"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_recent_bookings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"/>
+
+        <TextView
+            android:id="@+id/tv_no_booking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="暂无预约记录"
+            android:textSize="14sp"
+            android:textColor="@color/text_hint"
+            android:gravity="center"
+            android:paddingVertical="24dp"
+            android:visibility="gone"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

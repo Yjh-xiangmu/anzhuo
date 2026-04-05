@@ -6,6 +6,7 @@ public class Repair {
     private Integer deviceId;
     private String deviceName;
     private String description;
+    private String imageUrl;
     private String status;
     private String createdAt;
 
@@ -14,6 +15,7 @@ public class Repair {
     public Integer getDeviceId() { return deviceId; }
     public String getDeviceName() { return deviceName; }
     public String getDescription() { return description; }
+    public String getImageUrl() { return imageUrl; }
     public String getStatus() { return status; }
     public String getCreatedAt() { return createdAt; }
 }
